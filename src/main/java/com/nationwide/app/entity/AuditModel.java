@@ -2,42 +2,50 @@ package com.nationwide.app.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.EntityListeners;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
+
+
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
+@JsonIgnoreProperties(value = { "createdDate", "updatedDate" }, allowGetters = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public abstract class AuditModel {
 
-	private Date created;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "created_date", nullable = true, updatable = false)
+	@CreatedDate
+	private Date createdDate;
+	
+	@Column(name = "created_by")
 	private String createdBy;
-	private Date updated;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "updated_date", nullable = true, updatable = false)
+	@LastModifiedDate
+	private Date updatedDate;
+	
+	@Column(name = "updated_by")
 	private String updatedBy;
 	
-	public Date getCreated() {
-		return created;
-	}
-	public void setCreated(Date created) {
-		this.created = created;
-	}
-	public String getCreatedBy() {
-		return createdBy;
-	}
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	public Date getUpdated() {
-		return updated;
-	}
-	public void setUpdated(Date updated) {
-		this.updated = updated;
-	}
-	public String getUpdatedBy() {
-		return updatedBy;
-	}
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
-	}
-	@Override
-	public String toString() {
-		return "AuditModel [created=" + created + ", createdBy=" + createdBy + ", updated=" + updated + ", updatedBy="
-				+ updatedBy + "]";
-	}
-	
+
 	
 }
